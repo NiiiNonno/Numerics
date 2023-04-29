@@ -13,6 +13,8 @@ readonly struct Float32 : INumber<Float32>, IFormattable
 
     public bool Equals(Float32 other) => other.v == v;
 
+    public Float32 Copy() => new(v);
+
     public Float32 Sqrt() => new(MathF.Sqrt(v));
 
     public string ToString(string? format, IFormatProvider? provider) => v.ToString(format, provider);

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -40,6 +41,7 @@ public unsafe readonly struct Matrix<TNumber> : IMatrix<TNumber, Vector<TNumber>
 
         Size = m * n * sizeof(TNumber);
     }
+    public Matrix(nint p, int m, int n) : this((TNumber*)p, m, n) { }
     public Matrix(IMemory memory, int m, int n)
     {
         var s = m * n * sizeof(TNumber);
@@ -50,6 +52,13 @@ public unsafe readonly struct Matrix<TNumber> : IMatrix<TNumber, Vector<TNumber>
         Size = s;
     }
     public Matrix(int m, int n) : this(IMemory.Default, m, n) { }
+
+    public Matrix<TNumber> Copy()
+    {
+        var p = IMemory.Default.Alloc(Size);
+        Utils.Copy(this.p, (void*)p, Size);
+        return new(p, m, n);
+    }
 
     public Matrix<TNumber> Transpose()
     {
@@ -122,7 +131,7 @@ public unsafe readonly struct Matrix<TNumber> : IMatrix<TNumber, Vector<TNumber>
     public static Matrix<TNumber> operator *(TNumber a, Matrix<TNumber> b)
     {
         var r = new Matrix<TNumber>(m: b.m, n: b.n);
-        var l = b.Size;
+        var l = b.m * b.n;
         for (int i = 0; i < l; i++)
         {
             r.p[i] = a * b.p[i];
@@ -131,6 +140,7 @@ public unsafe readonly struct Matrix<TNumber> : IMatrix<TNumber, Vector<TNumber>
     }
     public static Matrix<TNumber> operator *(Matrix<TNumber> a, Matrix<TNumber> b)
     {
+        //Debug.WriteLine("?");
         if (a.n != b.m) ThrowHelper.ArgumentOutOfRange(b);
 
         var r = new Matrix<TNumber>(a.m, b.n);
@@ -151,7 +161,7 @@ public unsafe readonly struct Matrix<TNumber> : IMatrix<TNumber, Vector<TNumber>
     public static Matrix<TNumber> operator /(Matrix<TNumber> a, TNumber b)
     {
         var r = new Matrix<TNumber>(m: a.m, n: a.n);
-        var l = a.Size;
+        var l = a.m * a.n;
         for (int i = 0; i < l; i++)
         {
             r.p[i] = a.p[i] / b;
@@ -163,7 +173,7 @@ public unsafe readonly struct Matrix<TNumber> : IMatrix<TNumber, Vector<TNumber>
         if (a.m != b.m || a.n != b.n) ThrowHelper.InvalidArgument(b);
 
         var r = new Matrix<TNumber>(m: b.m, n: b.n);
-        var l = b.Size;
+        var l = b.m * b.n;
         for (int i = 0; i < l; i++)
         {
             r.p[i] = a.p[i] + b.p[i];
@@ -175,7 +185,7 @@ public unsafe readonly struct Matrix<TNumber> : IMatrix<TNumber, Vector<TNumber>
         if (a.m != b.m || a.n != b.n) ThrowHelper.InvalidArgument(b);
 
         var r = new Matrix<TNumber>(m: b.m, n: b.n);
-        var l = b.Size;
+        var l = b.m * b.n;
         for (int i = 0; i < l; i++)
         {
             r.p[i] = a.p[i] - b.p[i];

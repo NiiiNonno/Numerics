@@ -31,6 +31,7 @@ public unsafe readonly struct Vector<TNumber> : IVector<TNumber, Vector<TNumber>
 
         Size = d * sizeof(TNumber);
     }
+    public Vector(nint p, int d) : this((TNumber*)p, d) { }
     public Vector(IMemory memory, int dimension)
     {
         var l = dimension * sizeof(TNumber);
@@ -45,6 +46,13 @@ public unsafe readonly struct Vector<TNumber> : IVector<TNumber, Vector<TNumber>
 
     public Matrix<TNumber> AsColumn() => new(p, d, 1);
     public Matrix<TNumber> AsRow() => new(p, 1, d);
+
+    public Vector<TNumber> Copy()
+    {
+        var p = IMemory.Default.Alloc(Size);
+        Utils.Copy(this.p, (void*)p, Size);
+        return new((TNumber*)p, d);
+    }
 
     public void Delete(IMemory from)
     {

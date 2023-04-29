@@ -5,6 +5,7 @@ namespace Nonno.Numerics;
 public interface INumber<TSelf> : IEquatable<TSelf> where TSelf : INumber<TSelf>
 {
     TSelf Sqrt();
+    TSelf Copy();
     static abstract TSelf Zero { get; }
     static abstract TSelf Unit { get; }
     static abstract TSelf operator *(TSelf a, TSelf b);
@@ -22,6 +23,7 @@ public interface IVector<TNumber, TSelf> where TNumber : INumber<TNumber> where 
 {
     int Dimension { get; }
     TNumber this[int i] { get; set; }
+    TSelf Copy();
     static abstract TNumber operator *(TSelf a, TSelf b);
     static abstract TSelf operator *(TNumber a, TSelf b);
     static abstract TSelf operator +(TSelf a, TSelf b);
@@ -37,6 +39,7 @@ public interface IMatrix<TNumber, TVector, TSelf> where TNumber : INumber<TNumbe
     (int, int) Type { get; }
     TVector this[int i] { get; set; }
     TNumber this[int i, int j] { get; set; }
+    TSelf Copy();
     static abstract TVector operator *(TSelf a, TVector b);
     static abstract TSelf operator *(TNumber a, TSelf b);
     static abstract TSelf operator +(TSelf a, TSelf b);

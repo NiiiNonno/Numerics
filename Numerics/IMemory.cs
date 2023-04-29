@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -160,9 +161,9 @@ public unsafe class HeapMemory : IMemory
         void Extend(int length)
         {
             var cb = length < _len_min ? _len_min : length;
-            _next = Marshal.AllocHGlobal(cb);
+            _next = Marshal.AllocCoTaskMem(cb);
             _ps.Add(_next);
-            _rest = cb - length;
+            _rest = cb;
         }
     }
     public void Free(nint p, int length) { }
@@ -171,7 +172,7 @@ public unsafe class HeapMemory : IMemory
     {
         foreach (var p in _ps)
         {
-            Marshal.FreeHGlobal(p);
+            Marshal.FreeCoTaskMem(p);
         }
     }
     
@@ -184,7 +185,7 @@ public unsafe class HeapMemory : IMemory
     {
         foreach (var p in _ps)
         {
-            Marshal.FreeHGlobal(p);
+            Marshal.FreeCoTaskMem(p);
         }
     }
 }

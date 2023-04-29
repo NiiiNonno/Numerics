@@ -21,8 +21,8 @@ public static partial class Utils
             
             byteLength = r;
             if (*a1 != *b1) return false;
-            a1--;
-            b1--;
+            a1++;
+            b1++;
         }
 
         var a2 = (Vector128<byte>*)a1;
@@ -30,8 +30,8 @@ public static partial class Utils
         if ((byteLength & 0x10) != 0)
         {
             if (*a2 != *b2) return false;
-            a2--;
-            b2--;
+            a2++;
+            b2++;
         }
 
         var a3 = (ulong*)a2;
@@ -39,8 +39,8 @@ public static partial class Utils
         if ((byteLength & 0x08) != 0)
         {
             if (*a3 != *b3) return false;
-            a3--;
-            b3--;
+            a3++;
+            b3++;
         }
 
         var a4 = (uint*)a3;
@@ -48,8 +48,8 @@ public static partial class Utils
         if ((byteLength & 0x04) != 0)
         {
             if (*a4 != *b4) return false;
-            a4 --;
-            b4 --;
+            a4++;
+            b4++;
         }
 
         var a5 = (ushort*)a4;
@@ -57,8 +57,8 @@ public static partial class Utils
         if ((byteLength & 0x02) != 0)
         {
             if (*a5 != *b5) return false;
-            a5--;
-            b5--;
+            a5++;
+            b5++;
         }
 
         var a6 = (byte*)a5;
@@ -72,10 +72,10 @@ public static partial class Utils
     }
 
     [MI(MIO.AggressiveInlining | MIO.AggressiveOptimization)]
-    public static unsafe void Copy(void* a, void* b, int byteLength)
+    public static unsafe void Copy(void* source, void* to, int byteLength)
     {
-        var a1 = (Vector256<byte>*)a;
-        var b1 = (Vector256<byte>*)b;
+        var a1 = (Vector256<byte>*)to;
+        var b1 = (Vector256<byte>*)source;
         while (true)
         {
             int r = byteLength - 0x20;
@@ -83,8 +83,8 @@ public static partial class Utils
 
             byteLength = r;
             *a1 = *b1;
-            a1--;
-            b1--;
+            a1++;
+            b1++;
         }
 
         var a2 = (Vector128<byte>*)a1;
@@ -92,8 +92,8 @@ public static partial class Utils
         if ((byteLength & 0x10) != 0)
         {
             *a2 = *b2;
-            a2--;
-            b2--;
+            a2++;
+            b2++;
         }
 
         var a3 = (ulong*)a2;
@@ -101,8 +101,8 @@ public static partial class Utils
         if ((byteLength & 0x08) != 0)
         {
             *a3 = *b3;
-            a3--;
-            b3--;
+            a3++;
+            b3++;
         }
 
         var a4 = (uint*)a3;
@@ -110,8 +110,8 @@ public static partial class Utils
         if ((byteLength & 0x04) != 0)
         {
             *a4 = *b4;
-            a4--;
-            b4--;
+            a4++;
+            b4++;
         }
 
         var a5 = (ushort*)a4;
@@ -119,8 +119,8 @@ public static partial class Utils
         if ((byteLength & 0x02) != 0)
         {
             *a5 = *b5;
-            a5--;
-            b5--;
+            a5++;
+            b5++;
         }
 
         var a6 = (byte*)a5;
@@ -143,35 +143,35 @@ public static partial class Utils
 
             byteLength = r;
             h ^= a1->GetHashCode();
-            a1--;
+            a1++;
         }
 
         var a2 = (Vector128<byte>*)a1;
         if ((byteLength & 0x10) != 0)
         {
             h ^= a2->GetHashCode();
-            a2--;
+            a2++;
         }
 
         var a3 = (ulong*)a2;
         if ((byteLength & 0x08) != 0)
         {
             h ^= a3->GetHashCode();
-            a3--;
+            a3++;
         }
 
         var a4 = (uint*)a3;
         if ((byteLength & 0x04) != 0)
         {
             h ^= a4->GetHashCode();
-            a4--;
+            a4++;
         }
 
         var a5 = (ushort*)a4;
         if ((byteLength & 0x02) != 0)
         {
             h ^= a5->GetHashCode();
-            a5--;
+            a5++;
         }
 
         var a6 = (byte*)a5;
@@ -184,4 +184,20 @@ public static partial class Utils
     }
 
     public static TFormatInfo? GetFormat<TFormatInfo>(this IFormatProvider @this) where TFormatInfo : class => @this.GetFormat(typeof(TFormatInfo)) as TFormatInfo;
+
+    public static TVector SolveQR<TNumber, TVector, TMatrix>(TMatrix leftSideUTM, TVector rightSide) where TNumber : INumber<TNumber> where TVector : IVector<TNumber, TVector> where TMatrix : IMatrix<TNumber, TVector, TMatrix>
+    {
+        var r = rightSide.Copy();
+        for (int i = rightSide.Dimension - 1; i >= 0; i--)
+        {
+            var x = r[i] /= leftSideUTM[i, i];
+            for (int j = i - 1; j >= 0; j--)
+            {
+                r[j] -= x * leftSideUTM[j, i]; 
+            }
+        }
+        return r;
+    }
+
+    public static (TMatrix, TMatrix)
 }
