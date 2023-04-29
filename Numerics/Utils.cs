@@ -182,4 +182,6 @@ public static partial class Utils
 
         return h;
     }
+
+    public static TFormatInfo? GetFormat<TFormatInfo>(this IFormatProvider @this) where TFormatInfo : class => @this.GetFormat(typeof(TFormatInfo)) as TFormatInfo;
 }

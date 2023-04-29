@@ -6,6 +6,7 @@
     <Nullable>enable</Nullable>
     <RootNamespace>Nonno.$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <OutputType>Exe</OutputType>
   </PropertyGroup>
 
 </Project>

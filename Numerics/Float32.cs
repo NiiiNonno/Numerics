@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Nonno.Numerics;
-readonly struct Float32 : INumber<Float32>
+readonly struct Float32 : INumber<Float32>, IFormattable
 {
     readonly float v;
 
@@ -15,7 +15,8 @@ readonly struct Float32 : INumber<Float32>
 
     public Float32 Sqrt() => new(MathF.Sqrt(v));
 
-    public void Dispose() { }
+    public string ToString(string? format, IFormatProvider? provider) => v.ToString(format, provider);
+    public override string ToString() => v.ToString("f5");
 
     public static Float32 Zero => new(0);
     public static Float32 Unit => new(1);
@@ -27,4 +28,6 @@ readonly struct Float32 : INumber<Float32>
     public static Float32 operator /(Float32 a, Float32 b) => new(a.v / b.v);
     public static bool operator ==(Float32 a, Float32 b) => a.v == b.v;
     public static bool operator !=(Float32 a, Float32 b) => a.v != b.v;
+    public static explicit operator Float32(long v) => new(v);
+    public static explicit operator Float32(double v) => new((float)v);
 }
