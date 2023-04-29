@@ -15,7 +15,7 @@ public interface IMemory : IDisposable
     void Clear();
 
     [ThreadStatic]
-    static IMemory? _default;
+    private static IMemory? _default;
     public static IMemory Default
     {
         get => _default ??= new StackMemory();

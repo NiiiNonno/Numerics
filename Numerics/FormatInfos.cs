@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Nonno.Numerics;
 public class MatrixFormatInfo
 {
-    public virtual string Format<TNumber, TVector, TMatrix>(string? format, in TMatrix matrix, IFormatProvider? provider) where TNumber : INumber<TNumber> where TVector : IVector<TNumber, TVector> where TMatrix : IMatrix<TNumber, TVector, TMatrix>
+    public virtual string Format<TNumber, TMatrix>(TMatrix matrix, string? format, IFormatProvider? provider) where TNumber : unmanaged, INumber<TNumber> where TMatrix : IMatrix<TNumber, TMatrix>
     {
         format ??= "T5x1";
         switch (format[0])
@@ -55,4 +55,6 @@ public class MatrixFormatInfo
             throw new FormatException();
         }
     }
+
+    public static MatrixFormatInfo Default { get; } = new();
 }

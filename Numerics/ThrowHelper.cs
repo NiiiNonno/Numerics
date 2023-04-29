@@ -21,9 +21,19 @@ internal static class ThrowHelper
     [DoesNotReturn]
     [MethodImpl(MethodImplOptions.NoInlining)]
     public static void InvalidArgument(
-     object? argument,
-     [CallerArgumentExpression(nameof(argument))] string cAE = "",
-     [CallerFilePath] string cFP = "",
-     [CallerMemberName] string cMN = "",
-     [CallerLineNumber] int cLN = -1) => throw new ArgumentException($"{cAE} ノ引謄 {argument} 異常。於 {cFP} ノ {cMN} ノ {cLN} 行目。", cAE);
+        object? argument,
+        [CallerArgumentExpression(nameof(argument))] string cAE = "",
+        [CallerFilePath] string cFP = "",
+        [CallerMemberName] string cMN = "",
+        [CallerLineNumber] int cLN = -1) => throw new ArgumentException($"{cAE} ノ引謄 {argument} 異常。於 {cFP} ノ {cMN} ノ    {cLN} 行目。", cAE);
+
+    [DoesNotReturn]
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static void InvalidBinaryOperation(
+        object? a, object? b,
+        [CallerArgumentExpression(nameof(a))] string cAE_a = "",
+        [CallerArgumentExpression(nameof(b))] string cAE_b = "",
+        [CallerFilePath] string cFP = "",
+        [CallerMemberName] string cMN = "",
+        [CallerLineNumber] int cLN = -1) => throw new ArgumentException($"{cAE_a} ノ {a} と {cAE_b} ノ {b} との演算無効。於 {cFP} ノ {cMN} ノ {cLN} 行目。", cAE_a + ", " + cAE_b);
 }

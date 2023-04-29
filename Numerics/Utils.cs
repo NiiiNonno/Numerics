@@ -72,6 +72,12 @@ public static partial class Utils
     }
 
     [MI(MIO.AggressiveInlining | MIO.AggressiveOptimization)]
+    public static unsafe void Copy(nint source, void* to, int byteLength) => Copy((void*)source, to, byteLength);
+    [MI(MIO.AggressiveInlining | MIO.AggressiveOptimization)]
+    public static unsafe void Copy(void* source, nint to, int byteLength) => Copy(source, (void*)to, byteLength);
+    [MI(MIO.AggressiveInlining | MIO.AggressiveOptimization)]
+    public static unsafe void Copy(nint source, nint to, int byteLength) => Copy((void*)source, (void*)to, byteLength);
+    [MI(MIO.AggressiveInlining | MIO.AggressiveOptimization)]
     public static unsafe void Copy(void* source, void* to, int byteLength)
     {
         var a1 = (Vector256<byte>*)to;
@@ -185,7 +191,27 @@ public static partial class Utils
 
     public static TFormatInfo? GetFormat<TFormatInfo>(this IFormatProvider @this) where TFormatInfo : class => @this.GetFormat(typeof(TFormatInfo)) as TFormatInfo;
 
-    public static TVector SolveQR<TNumber, TVector, TMatrix>(TMatrix leftSideUTM, TVector rightSide) where TNumber : INumber<TNumber> where TVector : IVector<TNumber, TVector> where TMatrix : IMatrix<TNumber, TVector, TMatrix>
+    public static TVector Solve<TNumber, TVector, TMatrix>(TMatrix leftSide, TVector rightSide) where TNumber : unmanaged, INumber<TNumber> where TVector : IVector<TNumber, TVector> where TMatrix : IMatrix<TNumber, TMatrix>
+    {
+        var I = Matrix<TNumber>.Zero((3, 3));
+        I[0, 0] = I[1, 1] = I[2, 2] = (TNumber)1;
+
+        for (int i = 0; i < 2; i++)
+        {
+            var e = TVector.Zero(3);
+            e[i] = (TNumber)1;
+            var a = TVector.Cast(leftSide * TVector.Cast(e));
+            for (int j = 0; j < i; j++)
+                a[j] = TNumber.Zero;
+            var a_d = (a * a).Sqrt() * e - a;
+            var H = I - (TNumber)2 * (a_d.Column() * a_d.Row()) / (a_d * a_d);
+            leftSide = TMatrix.Cast(H * leftSide);
+            rightSide = TVector.Cast(H * TVector.Cast(rightSide));
+        }
+
+        return SolveQR<TNumber, TVector, TMatrix>(leftSide, rightSide);
+    }
+    public static TVector SolveQR<TNumber, TVector, TMatrix>(TMatrix leftSideUTM, TVector rightSide) where TNumber : unmanaged, INumber<TNumber> where TVector : IVector<TNumber, TVector> where TMatrix : IMatrix<TNumber, TMatrix>
     {
         var r = rightSide.Copy();
         for (int i = rightSide.Dimension - 1; i >= 0; i--)
@@ -198,6 +224,4 @@ public static partial class Utils
         }
         return r;
     }
-
-    public static (TMatrix, TMatrix)
 }
