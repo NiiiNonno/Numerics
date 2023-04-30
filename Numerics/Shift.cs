@@ -68,14 +68,14 @@ public readonly struct Shift
     public static long operator *(Shift left, long right) => right << left.e;
     public static ulong operator *(Shift left, ulong right) => right << left.e;
     public static unsafe float operator *(Shift left, float right) => (float)((Float32)right << left.e);
-    public static unsafe double operator *(Shift left, double right) => (double)((Float64)right << left.e);
+    //public static unsafe double operator *(Shift left, double right) => (double)((Float64)right << left.e);
     public static Shift operator *(Shift left, Shift right) => new(left.e + right.e);
     public static int operator /(int left, Shift right) => left >> right.e;
     public static uint operator /(uint left, Shift right) => left >> right.e;
     public static long operator /(long left, Shift right) => left >> right.e;
     public static ulong operator /(ulong left, Shift right) => left >> right.e;
     public static unsafe float operator /(float left, Shift right) => (float)((Float32)left >> right.e);
-    public static unsafe double operator /(double left, Shift right) => (double)((Float64)left >> right.e);
+    //public static unsafe double operator /(double left, Shift right) => (double)((Float64)left >> right.e);
     public static Shift operator /(Shift left, Shift right) => new(left.e - right.e);
     public static int operator %(int left, Shift right) => left & ~(~0 << right.e);
     public static uint operator %(uint left, Shift right) => left & ~(~0U << right.e);

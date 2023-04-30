@@ -15,8 +15,8 @@ public interface INumber<TSelf> : IEquatable<TSelf> where TSelf : INumber<TSelf>
     static abstract bool operator ==(TSelf a, TSelf b);
     static abstract bool operator !=(TSelf a, TSelf b);
     static abstract TSelf operator -(TSelf self);
-    static abstract explicit operator TSelf(long v);
     static abstract explicit operator TSelf(double v);
+    static abstract implicit operator double(TSelf v);
 }
 
 public interface IDecimal<TSelf> : INumber<TSelf> where TSelf : IDecimal<TSelf>
@@ -31,4 +31,13 @@ public interface IDecimal<TSelf> : INumber<TSelf> where TSelf : IDecimal<TSelf>
     static abstract TSelf Abs(TSelf x);
     static abstract TSelf Log(TSelf x);
     static abstract TSelf Atan2(TSelf a, TSelf b);
+}
+
+public interface IOrdered<TSelf> : IComparable<TSelf> where TSelf : struct, IOrdered<TSelf>
+{
+    int IComparable<TSelf>.CompareTo(TSelf other) => (TSelf)this < other ? -1 : (TSelf)this == other ? 0 : 1;
+    static abstract bool operator ==(TSelf a, TSelf b);
+    static abstract bool operator !=(TSelf a, TSelf b);
+    static abstract bool operator <(TSelf a, TSelf b);
+    static abstract bool operator >(TSelf a, TSelf b);
 }
