@@ -137,58 +137,6 @@ public static partial class Utils
         }
     }
 
-    public static unsafe int GetHashCode(void* a, int byteLength)
-    {
-        int h = 0;
-
-        var a1 = (Vector256<byte>*)a;
-        while (true)
-        {
-            int r = byteLength - 0x20;
-            if (r < 0) break;
-
-            byteLength = r;
-            h ^= a1->GetHashCode();
-            a1++;
-        }
-
-        var a2 = (Vector128<byte>*)a1;
-        if ((byteLength & 0x10) != 0)
-        {
-            h ^= a2->GetHashCode();
-            a2++;
-        }
-
-        var a3 = (ulong*)a2;
-        if ((byteLength & 0x08) != 0)
-        {
-            h ^= a3->GetHashCode();
-            a3++;
-        }
-
-        var a4 = (uint*)a3;
-        if ((byteLength & 0x04) != 0)
-        {
-            h ^= a4->GetHashCode();
-            a4++;
-        }
-
-        var a5 = (ushort*)a4;
-        if ((byteLength & 0x02) != 0)
-        {
-            h ^= a5->GetHashCode();
-            a5++;
-        }
-
-        var a6 = (byte*)a5;
-        if ((byteLength & 0x01) != 0)
-        {
-            h ^= a6->GetHashCode();
-        }
-
-        return h;
-    }
-
     public static TFormatInfo? GetFormat<TFormatInfo>(this IFormatProvider @this) where TFormatInfo : class => @this.GetFormat(typeof(TFormatInfo)) as TFormatInfo;
 
     public static TVector Solve<TNumber, TVector, TMatrix>(TMatrix leftSide, TVector rightSide) where TNumber : unmanaged, INumber<TNumber> where TVector : IVector<TNumber, TVector> where TMatrix : IMatrix<TNumber, TMatrix>
@@ -223,5 +171,28 @@ public static partial class Utils
             }
         }
         return r;
+    }
+
+    public static int[] BitReverse(Shift length)
+    {
+        var r = new int[length];
+        var expo = length.Exponent;
+        for (int i = 0; i < r.Length; i++)
+        {
+            for (int j = 0; j < expo; j++)
+                r[i] |= ((i >> j) & 1) << (expo - j - 1);
+        }
+        return r;
+    }
+
+    public static float HammingWindow(float x)
+    {
+        if (x is <= 1 or >= 0) return 0.54f - 0.46f * MathF.Cos(2 * MathF.PI * x);
+        else return float.NaN;
+    }
+    public static double HammingWindow(double x)
+    {
+        if (x is <= 1 or >= 0) return 0.54 - 0.46 * Math.Cos(2 * Math.PI * x);
+        else return double.NaN;
     }
 }

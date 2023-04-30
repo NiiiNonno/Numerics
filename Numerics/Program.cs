@@ -11,22 +11,21 @@ CultureInfo.CurrentCulture = fp;
 using IMemory mem = new HeapMemory(0);
 IMemory.Default = mem;
 
-var A = Matrix<Float32>.Zero((3, 3));
-A[0, 0] = (Float32)2;
-A[0, 1] = (Float32)3;
-A[0, 2] = (Float32)1;
-A[1, 0] = (Float32)4;
-A[1, 1] = (Float32)4;
-A[1, 2] = (Float32)2;
-A[2, 0] = (Float32)(-2);
-A[2, 1] = (Float32)3;
-A[2, 2] = (Float32)(-2);
+var A = new Matrix<Float32>((3, 3))
+{
+    [0, 0] = 2, [0, 1] = 3, [0, 2] = 1,
+    [1, 0] = 4, [1, 1] = 4, [1, 2] = 2,
+    [2, 0] = -2, [2, 1] = 3, [2, 2] = -2,
+};
 Console.WriteLine($"A:\n{A:S10-0.000}");
 
-var b = Vector<Float32>.Zero(3);
-b[0] = (Float32)1;
-b[1] = (Float32)(-2);
-b[2] = (Float32)14;
+var b = new Vector<Float32>(3)
+{
+    [0] = 1,
+    [1] = -2,
+    [2] = 14
+};
+Console.WriteLine($"b:\n{b:S10-0.000}");
 
 var x = Utils.Solve<Float32, Vector<Float32>, Matrix<Float32>>(A, b);
 Console.WriteLine($"x:\n{x:S10-0.000}");

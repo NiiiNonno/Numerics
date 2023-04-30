@@ -56,6 +56,12 @@ public unsafe readonly struct Matrix<TNumber> : IMatrix<TNumber, Matrix<TNumber>
         n = type.Item2;
     }
     public Matrix(nint ptr, (int, int) type) : this((TNumber*)ptr, type) { }
+    public Matrix((int, int) type)
+    {
+        m = type.Item1;
+        n = type.Item2;
+        p = (TNumber*)IMemory.Default.Alloc(m * n * sizeof(TNumber));
+    }
 
     public Matrix<TNumber> Transpose()
     {

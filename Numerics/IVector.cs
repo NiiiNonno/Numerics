@@ -55,6 +55,12 @@ public unsafe readonly struct Vector<TNumber> : IVector<TNumber, Vector<TNumber>
     }
     public Vector(nint ptr, int dimension) : this((TNumber*)ptr, dimension) { }
     public Vector(TNumber* ptr, int dimension) : this(ptr, dimension, dimension * sizeof(TNumber)) { }
+    public Vector(int dimension)
+    {
+        d = dimension;
+        s = dimension * sizeof(TNumber);
+        p = (TNumber*)IMemory.Default.Alloc(s);
+    }
 
     public Vector<TNumber> Copy()
     {

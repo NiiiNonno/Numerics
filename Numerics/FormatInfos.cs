@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -57,4 +58,30 @@ public class MatrixFormatInfo
     }
 
     public static MatrixFormatInfo Default { get; } = new();
+}
+
+public class ComplexFormatInfo
+{
+    public virtual string Format<TDecimal>(Complex<TDecimal> complex, string? format, IFormatProvider? provider) where TDecimal : IDecimal<TDecimal>
+    {
+        switch (complex.r.IsPositiveInfinity, complex.r.IsNegativeInfinity, complex.r.IsNaN, complex.r == TDecimal.Zero, complex.i.IsPositiveInfinity, complex.i.IsNegativeInfinity, complex.i.IsNaN, complex.i == TDecimal.Zero)
+        {
+            case (true, false, false, false, true, false, false, false): return "Infinity (orthant: 1)";
+            case (false, true, false, false, true, false, false, false): return "Infinity (orthant: 2)";
+            case (false, true, false, false, false, true, false, false): return "Infinity (orthant: 3)";
+            case (true, false, false, false, false, true, false, false): return "Infinity (orthant: 4)";
+            case (true, false, false, false, false, false, false, false): return "RePositiveInfinity";
+            case (false, false, false, false, true, false, false, false): return "ImPositiveInfinity";
+            case (false, true, false, false, false, false, false, false): return "ReNegativeInfinity";
+            case (false, false, false, false, false, true, false, false): return "ImNegativeInfinity";
+            case (false, false, true, false, _, _, _, _):
+            case (_, _, _, _, false, false, true, false): return "NaN";
+            case (false, false, false, true, false, false, false, true): return "0";
+            case (false, false, false, true, false, false, false, false): return complex.r is IFormattable f1 ? f1.ToString(format, provider) : complex.r.ToString() ?? "RealNumber";
+            case (false, false, false, false, false, false, false, true): return complex.i is IFormattable f2 ? f2.ToString(format, provider) : complex.i.ToString() ?? "ImaginaryNumber";
+            default: return $"{(complex.r is IFormattable f3 ? f3.ToString(format, provider) : complex.r.ToString())} + {(complex.i is IFormattable f4 ? f4.ToString(format, provider) : complex.i.ToString())}i";
+        }
+    }
+
+    public static ComplexFormatInfo Default { get; } = new();
 }
