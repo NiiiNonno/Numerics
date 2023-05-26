@@ -31,7 +31,7 @@
 //        var b = Reduce(other);
 //        return a.n == b.n && a.d == b.d;
 //    }
-//    public override int GetHashCode() => HashCode.Combine(n,d);
+//    public override int GetHashCode() => HashCode.Combine(n, d);
 //    public override string ToString() => $"{n}/{d}={Value}";
 
 //    public static Fraction<TNumber> Zero => new(TNumber.Zero, TNumber.Unit);

@@ -11,24 +11,24 @@ CultureInfo.CurrentCulture = fp;
 using IMemory mem = new HeapMemory(0);
 IMemory.Default = mem;
 
-var A = new Matrix<Float32>((3, 3))
-{
-    [0, 0] = 2, [0, 1] = 3, [0, 2] = 1,
-    [1, 0] = 4, [1, 1] = 4, [1, 2] = 2,
-    [2, 0] = -2, [2, 1] = 3, [2, 2] = -2,
-};
-Console.WriteLine($"A:\n{A:S10-0.000}");
+//var A = new Matrix<Float32>((3, 3))
+//{
+//    [0, 0] = 2, [0, 1] = 3, [0, 2] = 1,
+//    [1, 0] = 4, [1, 1] = 4, [1, 2] = 2,
+//    [2, 0] = -2, [2, 1] = 3, [2, 2] = -2,
+//};
+//Console.WriteLine($"A:\n{A:S10-0.000}");
 
-var b = new Vector<Float32>(3)
-{
-    [0] = 1,
-    [1] = -2,
-    [2] = 14
-};
-Console.WriteLine($"b:\n{b:S10-0.000}");
+//var b = new Vector<Float32>(3)
+//{
+//    [0] = 1,
+//    [1] = -2,
+//    [2] = 14
+//};
+//Console.WriteLine($"b:\n{b:S10-0.000}");
 
-var x = Utils.Solve<Float32, Vector<Float32>, Matrix<Float32>>(A, b);
-Console.WriteLine($"x:\n{x:S10-0.000}");
+//var x = Utils.Solve<Float32, Vector<Float32>, Matrix<Float32>>(A, b);
+//Console.WriteLine($"x:\n{x:S10-0.000}");
 
 class FormatProvider : CultureInfo
 {

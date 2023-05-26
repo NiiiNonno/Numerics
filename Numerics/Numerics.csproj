@@ -8,5 +8,4 @@
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <OutputType>Exe</OutputType>
   </PropertyGroup>
-
 </Project>

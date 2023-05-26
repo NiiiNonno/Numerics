@@ -2,6 +2,29 @@
 
 namespace Nonno.Numerics;
 
+////珺の元
+//public interface IMember<TSelf> : IEquatable<TSelf> where TSelf : IMember<TSelf>
+//{
+//    public TSelf Zero { get; }
+
+//    public static abstract TSelf operator +(in TSelf a);
+//    public static abstract TSelf operator -(in TSelf a);
+//    public static abstract TSelf operator +(in TSelf a, in TSelf b);
+//    public static abstract TSelf operator -(in TSelf a, in TSelf b);
+//    public static virtual bool operator ==(in TSelf a, in TSelf b) => a.Equals(b);
+//    public static virtual bool operator !=(in TSelf a, in TSelf b) => !a.Equals(b);
+//}
+
+//public interface IRightOperator<TSelf, TFrom, TTo> where TSelf : IRightOperator<TSelf, TFrom, TTo>
+//{
+//    public static abstract TTo operator *(in TSelf a, in TFrom b);
+//}
+
+//public interface ILeftOperator<TSelf, TFrom, TTo> where TSelf : ILeftOperator<TSelf, TFrom, TTo>
+//{
+//    public static abstract TTo operator *(in TFrom a, in TSelf b);
+//}
+
 public interface INumber<TSelf> : IEquatable<TSelf> where TSelf : INumber<TSelf>
 {
     TSelf Copy();

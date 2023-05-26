@@ -1,0 +1,21 @@
+﻿Code|Term|Description
+-|-|-
+category|土
+collection|宝
+field|玎|因音写
+fixed|固定小数点数
+float|浮動小数点数
+group|珺|因音写
+lattice|琚
+magma|玨|カク
+monoid|璂
+orderd set|瑣
+rack|珪
+ring|環
+scalar|標量
+semigroup|璉
+set|玉
+stack|堆
+space|琺
+tensor|張量
+vector|向量
